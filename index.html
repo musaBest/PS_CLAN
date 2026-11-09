@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مسابقة كلان PS الكبرى | إشراف: مصعب موسى الأسود</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #334155;
+      border-radius: 4px;
+    }
+    .choice-card input[type="radio"]:checked + .choice-content {
+      border-color: #6366f1;
+      background-color: #1e1b4b;
+      box-shadow: 0 0 0 2px #818cf8;
+    }
+    .img-zoom {
+      transition: transform 0.3s ease;
+    }
+    .img-zoom:hover {
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- شريط التنقل العلوي -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 text-white shadow-xl sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 font-black text-xl tracking-wider text-yellow-300">
+          PS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 id="headerQuizTitle" class="text-base sm:text-lg font-black tracking-wide bg-gradient-to-r from-yellow-300 via-amber-200 to-white bg-clip-text text-transparent">
+              مسابقة كلان PS الكبرى 🎮
+            </h1>
+            <span class="text-[10px] bg-red-600/80 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse">Live</span>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            صُممت المنصة بإشراف وتطوير: <span class="text-indigo-300 font-bold">مصعب موسى الأسود</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- أزرار المشرف السرية (تظهر فقط عند تسجيل دخول المشرف) -->
+      <div id="adminNavButtons" class="hidden flex items-center gap-2">
+        <button onclick="switchTab('quiz')" id="tabBtnQuiz" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow">
+          شاشة المتسابق
+        </button>
+        <button onclick="switchTab('admin')" id="tabBtnAdmin" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-slate-200">
+          لوحة التحكم ⚙️
+        </button>
+        <button onclick="switchTab('results')" id="tabBtnResults" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1">
+          النتائج 📊
+          <span id="resultsBadge" class="bg-yellow-400 text-slate-950 text-[10px] px-1.5 py-0.2 rounded-full font-black">0</span>
+        </button>
+        <button onclick="lockAdmin()" title="قفل لوحة المشرف" class="p-1.5 bg-red-900/50 hover:bg-red-800 text-red-200 rounded-lg text-xs">
+          🔒 خروج
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- محتوى التطبيق الرئيسي -->
+  <main class="max-w-4xl w-full mx-auto p-4 md:p-6 flex-1 space-y-8">
+
+    <!-- ============================================== -->
+    <!-- 1. شاشة المتسابق (وضع المسابقة والتسجيل) -->
+    <!-- ============================================== -->
+    <section id="sectionQuiz" class="space-y-8">
+
+      <!-- مرحلة التسجيل والترحيب الحماسي مع معرض صور أبطال كلان PS -->
+      <div id="studentEntryCard" class="space-y-6 max-w-2xl mx-auto">
+        
+        <!-- كارت الترحيب الرئيسي -->
+        <div class="bg-slate-900/80 rounded-3xl shadow-2xl border border-slate-800 p-6 sm:p-8 text-center space-y-6 backdrop-blur-xl">
+          
+          <div class="space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-black">
+              <span>🔥 مرحباً بكم في تحدي أبطال كلان PS 🔥</span>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-black text-white" id="entryQuizTitle">
+              مسابقة كلان PS الكبرى 🏆
+            </h2>
+            
+            <div class="bg-gradient-to-b from-indigo-950/40 to-slate-900/60 p-4 rounded-2xl border border-indigo-500/20 text-xs sm:text-sm text-slate-300 leading-relaxed text-right space-y-2">
+              <p class="font-bold text-amber-300 flex items-center gap-1.5">
+                <span>🎁</span>
+                <span>جوائز ومكافآت مالية فورية للفائزين!</span>
+              </p>
+              <p>
+                أهلاً بكم يا وحوش ونخبة كلان <span class="font-black text-yellow-300">PS</span>! استعدوا لاختبار معلوماتكم وسرعة بديهتكم في هذا التحدي. أصحاب المراكز الأولى سيحصلون على جوائز مالية تُحوّل مباشرة على أرقام جوالاتكم فور انتهاء الوقت.
+              </p>
+              <p class="text-indigo-300 text-[11px] font-semibold">
+                ⏱️ الوقت محسوب بدقة بالثانية، والتسليم يُقفل تلقائياً عند انتهاء الوقت!
+              </p>
+            </div>
+          </div>
+
+          <!-- معرض صور أبطال كلان PS -->
+          <div class="space-y-3 pt-2">
+            <div class="flex items-center justify-between px-1">
+              <span class="text-xs font-bold text-yellow-300 flex items-center gap-1.5">
+                <span>📸</span>
+                <span>أجواء ولمّة أبطال كلان PS:</span>
+              </span>
+              <span class="text-[10px] text-slate-400">عائلة كلان PS في الميدان 💪</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div onclick="openLightbox('images/member1.jpg', 'لمّة الشباب - كافيه الكلان')" class="group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 cursor-pointer aspect-video sm:aspect-square img-zoom">
+                <img src="images/member1.jpg" alt="أبطال كلان PS" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2 opacity-90">
+                  <span class="text-[10px] font-bold text-yellow-300 truncate">سهرة الأبطال ☕</span>
+                </div>
+              </div>
+
+              <div onclick="openLightbox('images/member2.jpg', 'عزومة الشباب - طاولة الطعام')" class="group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 cursor-pointer aspect-video sm:aspect-square img-zoom">
+                <img src="images/member2.jpg" alt="أبطال كلان PS" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2 opacity-90">
+                  <span class="text-[10px] font-bold text-yellow-300 truncate">سفرة العزومة 🍗</span>
+                </div>
+              </div>
+
+              <div onclick="openLightbox('images/member3.jpg', 'رحلة البحر - أبطال الكلان')" class="group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 cursor-pointer aspect-video sm:aspect-square img-zoom">
+                <img src="images/member3.jpg" alt="أبطال كلان PS" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2 opacity-90">
+                  <span class="text-[10px] font-bold text-yellow-300 truncate">رحلة البحر 🌊</span>
+                </div>
+              </div>
+
+              <div onclick="openLightbox('images/member4.jpg', 'وحوش الكلان - الجولة')" class="group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 cursor-pointer aspect-video sm:aspect-square img-zoom">
+                <img src="images/member4.jpg" alt="أبطال كلان PS" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2 opacity-90">
+                  <span class="text-[10px] font-bold text-yellow-300 truncate">وحوش الميدان ⚡</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- حقول إدخال بيانات المتسابق -->
+          <div class="space-y-4 text-right pt-2 border-t border-slate-800/80">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">اسم المتسابق الكامل (أو اسمك في اللعبة):</label>
+              <input type="text" id="studentNameInput" placeholder="اكتب اسمك هنا..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm font-bold transition">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+                <span>رقم الجوال / المحفظة للتحويل بحال الفوز 📱:</span>
+                <span class="text-[10px] text-amber-400 font-bold">(سري ومحمي)</span>
+              </label>
+              <input type="tel" id="studentPhoneInput" placeholder="مثال: 059xxxxxxx أو رقم المحفظة..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm font-bold font-mono transition" dir="ltr">
+            </div>
+
+            <div class="bg-amber-950/30 border border-amber-600/30 rounded-xl p-3 text-xs text-amber-200 flex items-start gap-2">
+              <span class="text-base">⏳</span>
+              <span>بمجرد الضغط على زر الدخول، سيبدأ المؤقت بالتنازل ولن يمكنك إيقافه حتى تسليم الإجابات.</span>
+            </div>
+
+            <button onclick="startStudentSession()" class="w-full py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-black text-base shadow-lg shadow-indigo-600/30 transition transform active:scale-98 flex items-center justify-center gap-2">
+              <span>دخول التحدي الآن 🚀</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- مرحلة الانتظار حتى يحين وقت البدء المحدد -->
+      <div id="waitingScreen" class="hidden bg-slate-900/80 rounded-3xl shadow-2xl border border-slate-800 p-8 text-center max-w-lg mx-auto space-y-5 backdrop-blur-xl">
+        <div class="w-20 h-20 bg-indigo-950/60 text-amber-400 border border-amber-500/30 rounded-full flex items-center justify-center mx-auto animate-pulse">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-black text-white">المسابقة لم تبدأ بعد!</h3>
+        <p class="text-slate-300 text-sm">
+          مرحباً بك يا بطل <span id="waitingStudentName" class="font-black text-yellow-300"></span>.
+          ستفتح الأسئلة تلقائياً لجميع الأعضاء في تمام الموعد المحدد:
+        </p>
+        <div class="bg-slate-950 border border-indigo-500/30 rounded-2xl p-4 font-mono text-3xl font-black text-amber-400 tracking-wider" id="waitingCountdown">
+          00:00:00
+        </div>
+        <p class="text-xs text-slate-500">يرجى البقاء في هذه الصفحة، وستظهر الأسئلة تلقائياً فور حلول الوقت المحدد.</p>
+      </div>
+
+      <!-- مرحلة حل الأسئلة مع شريط المؤقت العائم -->
+      <div id="quizActiveArea" class="hidden space-y-6">
+
+        <!-- شريط التوقيت العائم -->
+        <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-800 p-3.5 sticky top-16 z-40 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs sm:text-sm font-bold text-slate-300">
+              المتسابق: <span id="activeStudentName" class="text-yellow-300 font-black"></span>
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
+            <span class="text-xs text-slate-400 font-bold hidden sm:inline">الوقت المتبقي:</span>
+            <div id="timerBadge" class="bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl font-mono text-base sm:text-lg font-black flex items-center gap-2 transition-colors">
+              <svg class="w-4 h-4 animate-spin text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="15 30" stroke-linecap="round"/>
+              </svg>
+              <span id="quizTimerDisplay">10:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- قائمة الأسئلة -->
+        <div id="questionsContainer" class="space-y-6">
+          <!-- تُولد الأسئلة هنا ديناميكياً مع دعم الصور -->
+        </div>
+
+        <!-- زر التسليم اليدوي قبل انتهاء الوقت -->
+        <div class="flex justify-end pt-4">
+          <button onclick="submitQuizManually()" class="px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl shadow-lg shadow-emerald-900/30 transition transform active:scale-95 flex items-center gap-2">
+            <span>تسليم الإجابات وإنهاء المسابقة 🏁</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- مرحلة النهاية (بعد انتهاء الوقت أو التسليم) -->
+      <div id="quizFinishedCard" class="hidden bg-slate-900/80 rounded-3xl shadow-2xl border border-slate-800 p-8 sm:p-10 text-center max-w-lg mx-auto space-y-6 backdrop-blur-xl">
+        <div class="w-20 h-20 bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-black text-white" id="finishTitle">تم تسليم إجاباتك بنجاح! 🏆</h3>
+        <p class="text-slate-300 text-sm leading-relaxed" id="finishDesc">
+          شكراً لمشاركتك يا بطل <span id="finishedStudentName" class="font-black text-yellow-300"></span>.
+          تم تسجيل جميع إجاباتك وحفظ رقم جوالك للتحويل بنجاح.
+        </p>
+
+        <!-- صندوق الملاحظة الإدارية -->
+        <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-4 text-xs text-indigo-200 text-right space-y-1">
+          <p class="font-bold flex items-center gap-1.5 text-amber-300">
+            <span>🔒</span>
+            <span>إعلان النتائج وتوزيع الجوائز:</span>
+          </p>
+          <p>
+            تتم مراجعة الإجابات واعتماد الفائزين بواسطة المشرف <span class="font-bold text-white">مصعب موسى الأسود</span>، وسيتم التواصل مع الفائزين لتحويل الجوائز مباشرة.
+          </p>
+        </div>
+
+        <!-- زر مراجعة الإجابات (يظهر فقط إذا قام المشرف بتفعيله) -->
+        <div id="reviewAnswersSection" class="hidden pt-2">
+          <button onclick="toggleAnswersReview()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+            <span>🔍 مراجعة إجاباتي ومعرفة الأخطاء</span>
+          </button>
+        </div>
+
+        <!-- نافذة عرض المراجعة والأخطاء بالتفصيل -->
+        <div id="reviewDetailsBox" class="hidden space-y-4 text-right pt-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-yellow-300">تفاصيل إجاباتك والأخطاء:</h4>
+          <div id="reviewQuestionsContainer" class="space-y-4 text-xs">
+            <!-- تتولد هنا تفاصيل كل سؤال وما أجابه الطالب وما الإجابة الصحيحة -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 2. لوحة تحكم المشرف (إعدادات الأسئلة والصور والوقت والمراجعة) -->
+    <!-- ============================================== -->
+    <section id="sectionAdmin" class="hidden space-y-6">
+
+      <div class="bg-slate-900/80 rounded-3xl shadow-xl border border-slate-800 p-6 space-y-6 backdrop-blur-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-black text-white flex items-center gap-2">
+              <span>⚙️ لوحة إدارة مسابقة كلان PS</span>
+              <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">المشرف: مصعب الأسود</span>
+            </h2>
+            <p class="text-xs text-slate-400">إدارة الأسئلة، رفع الصور، التحكم بالوقت، تفعيل المراجعة، وربط الباك إند</p>
+          </div>
+          <button onclick="saveAdminSettings()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black rounded-xl transition shadow shadow-indigo-600/30 flex items-center justify-center gap-1.5">
+            <span>حفظ الإعدادات 💾</span>
+          </button>
+        </div>
+
+        <!-- خاصية مراجعة الأخطاء بعد الانتهاء (حسب طلب مصعب) -->
+        <div class="bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-slate-900/60 p-4 rounded-2xl border border-purple-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-black text-purple-200 flex items-center gap-2">
+                <span>🔍 السماح للمتسابقين بمراجعة إجاباتهم ومعرفة الأخطاء بعد انتهاء الوقت:</span>
+              </span>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                (معطلة افتراضياً. إذا قمت بتفعيلها وحفظ الإعدادات، سيتمكن المتسابق في شاشة النهاية من فتح مراجعة شاملة لأسئلته ومعرفة إجاباته الخاطئة والصحيحة).
+              </p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer mr-2">
+              <input type="checkbox" id="adminAllowReviewToggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- إعدادات المسابقة والوقت -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">عنوان المسابقة:</label>
+            <input type="text" id="adminQuizTitle" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">رمز مرور المشرف (PIN السري):</label>
+            <input type="text" id="adminPinCode" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm font-mono focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+        </div>
+
+        <!-- التوقيت والإغلاق التلقائي -->
+        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+            <span>⏱️ التحكم بالوقت والإغلاق التلقائي:</span>
+          </h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">المدة المسموحة للحل (بالدقائق):</label>
+              <input type="number" id="adminDurationMinutes" min="1" max="180" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm font-bold text-yellow-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+              <span class="text-[10px] text-slate-400">مثال: 10 دقائق</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">ساعة البدء المحددة (اختياري):</label>
+              <input type="time" id="adminStartTime" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+              <span class="text-[10px] text-slate-400">مثال: 11:00 (لن تفتح قبلها)</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">ساعة الإغلاق النهائي (اختياري):</label>
+              <input type="time" id="adminEndTime" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+              <span class="text-[10px] text-slate-400">مثال: 11:10 (تُقفل على الجميع فوراً)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ربط الباك إند / الداتابيز (Google Sheets Webhook) -->
+        <div class="bg-gradient-to-r from-indigo-950/40 to-slate-900/60 p-4 rounded-2xl border border-indigo-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-black text-emerald-300 flex items-center gap-1.5">
+              <span>📊 رابط الباك إند السحابي (Google Sheets Webhook URL):</span>
+            </label>
+            <button onclick="toggleBackendGuide()" class="text-[11px] text-indigo-300 underline font-bold">
+              كيف أحصل على هذا الرابط في دقيقة واحدة؟
+            </button>
+          </div>
+          <input type="url" id="adminBackendUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs font-mono text-emerald-300 focus:ring-2 focus:ring-emerald-500 outline-none" dir="ltr">
+          <p class="text-[10px] text-slate-400">
+            عند وضع رابط Google Sheets هنا، سيتم إرسال اسم كل متسابق، رقم جواله، وعلامته وإجاباته إلى شيت إكسل خاص بك في درايف مباشرة ولحظياً!
+          </p>
+
+          <!-- دليل الكود السريع لربط جوجل شيتس -->
+          <div id="backendGuideBox" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs text-slate-300">
+            <p class="font-bold text-amber-300">خطوات الربط المجاني بـ Google Sheets خلال دقيقة:</p>
+            <ol class="list-decimal list-inside space-y-1 text-[11px]">
+              <li>افتح ملف Google Sheets جديد بحسابك على Google.</li>
+              <li>من القائمة العلوية اضغط على <b>Extensions (الإضافات)</b> ثم <b>Apps Script</b>.</li>
+              <li>امسح أي كود موجود هناك، والصق الكود البسيط أدناه واضغط <b>Save</b> ثم <b>Deploy (نشر) -> New deployment -> نوع Web app</b> واجعل الوصول <b>Anyone</b>.</li>
+              <li>انسخ الرابط الذي يظهر لك وضعه في الخانة أعلاه!</li>
+            </ol>
+            <textarea readonly class="w-full h-24 p-2 bg-slate-900 text-indigo-300 rounded-lg text-[10px] font-mono outline-none border border-slate-800" dir="ltr">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([new Date(), data.student, data.phone, data.score, data.maxPoints, data.percentage + "%", data.timeSpent]);
+  return ContentService.createTextOutput(JSON.stringify({status: "ok"})).setMimeType(ContentService.MimeType.JSON);
+}</textarea>
+          </div>
+        </div>
+
+        <!-- قسم إدارة الأسئلة -->
+        <div class="space-y-4 pt-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-white flex items-center gap-2">
+              <span>الأسئلة الحالية (<span id="questionCountBadge" class="text-yellow-300">0</span>)</span>
+            </h3>
+            <button onclick="addNewQuestionModal()" class="px-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/40 text-xs font-bold rounded-xl transition flex items-center gap-1">
+              <span>+ إضافة سؤال جديد (مع صور)</span>
+            </button>
+          </div>
+
+          <div id="adminQuestionsList" class="space-y-3">
+            <!-- قائمة الأسئلة لإدارتها -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 3. لوحة النتائج (للمشرف مصعب الأسود فقط) -->
+    <!-- ============================================== -->
+    <section id="sectionResults" class="hidden space-y-6">
+
+      <div class="bg-slate-900/80 rounded-3xl shadow-xl border border-slate-800 p-6 space-y-6 backdrop-blur-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-black text-white flex items-center gap-2">
+              <span>📊 لوحة نتائج مسابقة كلان PS</span>
+              <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">خاصة بالإدارة</span>
+            </h2>
+            <p class="text-xs text-slate-400">تظهر النتائج هنا فقط للمشرف مصعب، مع أرقام الجوالات للتحويل الفوري للفائزين</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="exportResultsToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>تصدير النتائج (Excel)</span>
+            </button>
+            <button onclick="clearAllResults()" class="px-3 py-2 bg-red-900/30 hover:bg-red-900/50 text-red-300 border border-red-700/40 text-xs font-bold rounded-xl transition">
+              مسح النتائج 🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- بطاقات الإحصائيات -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-2xl p-3.5 text-center">
+            <span class="text-[11px] text-indigo-300 font-bold block">إجمالي المتسابقين</span>
+            <span id="statTotalStudents" class="text-2xl font-black text-white">0</span>
+          </div>
+          <div class="bg-amber-950/40 border border-amber-500/20 rounded-2xl p-3.5 text-center">
+            <span class="text-[11px] text-amber-300 font-bold block">أعلى علامة 🏆</span>
+            <span id="statHighestScore" class="text-2xl font-black text-amber-300">0</span>
+          </div>
+          <div class="bg-emerald-950/40 border border-emerald-500/20 rounded-2xl p-3.5 text-center">
+            <span class="text-[11px] text-emerald-300 font-bold block">متوسط العلامات</span>
+            <span id="statAverageScore" class="text-2xl font-black text-emerald-300">0</span>
+          </div>
+          <div class="bg-purple-950/40 border border-purple-500/20 rounded-2xl p-3.5 text-center">
+            <span class="text-[11px] text-purple-300 font-bold block">الدرجة الكاملة</span>
+            <span id="statMaxPossible" class="text-2xl font-black text-purple-300">0</span>
+          </div>
+        </div>
+
+        <!-- جدول النتائج مع تمييز المراكز الثلاثة الأولى -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-950 text-slate-300 font-bold">
+              <tr>
+                <th class="p-3">الترتيب</th>
+                <th class="p-3">اسم المتسابق</th>
+                <th class="p-3">رقم الجوال للتحويل 📱</th>
+                <th class="p-3">العلامة</th>
+                <th class="p-3">النسبة</th>
+                <th class="p-3">وقت التسليم</th>
+                <th class="p-3">المدة</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody" class="divide-y divide-slate-800">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-slate-500">لا توجد إجابات مسجلة حتى الآن.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- نافذة منبثقة متطورة لإضافة وتعديل الأسئلة مع دعم كامل للصور -->
+  <div id="questionModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+    <div class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-700 max-w-xl w-full p-6 space-y-4 my-8 max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-black text-white text-base" id="modalTitle">إضافة سؤال جديد</h3>
+        <button onclick="closeQuestionModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-4 text-right">
+        <!-- نص السؤال -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">نص السؤال:</label>
+          <textarea id="modalQuestionText" rows="2" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="اكتب نص السؤال هنا..."></textarea>
+        </div>
+
+        <!-- صورة السؤال (اختياري) -->
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+          <label class="block text-xs font-bold text-yellow-300 flex items-center gap-1.5">
+            <span>🖼️ صورة السؤال (اختياري):</span>
+          </label>
+          <div class="flex flex-col sm:flex-row gap-2 items-center">
+            <input type="file" id="modalQuestionImageFile" accept="image/*" onchange="handleImageUpload(event, 'questionImgPreview', 'modalQuestionImageUrl')" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+            <span class="text-slate-500 text-xs">أو رابط:</span>
+            <input type="url" id="modalQuestionImageUrl" placeholder="رابط صورة مباشر..." oninput="previewUrlImage('modalQuestionImageUrl', 'questionImgPreview')" class="flex-1 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none" dir="ltr">
+          </div>
+          <div id="questionImgPreviewContainer" class="hidden pt-1">
+            <img id="questionImgPreview" src="" class="max-h-36 rounded-lg border border-slate-700 mx-auto object-contain">
+          </div>
+        </div>
+
+        <!-- خيارات الإجابة مع دعم الصور لكل خيار -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-2">الخيارات الأربعة (حدد الإجابة الصحيحة بالدائرة):</label>
+          <div class="space-y-3" id="modalChoicesContainer">
+            <!-- خيار 1 -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="correctChoice" value="0" checked class="w-4 h-4 text-indigo-600">
+                <span class="text-xs font-bold text-indigo-300">الخيار 1 (الصحيح افتراضياً):</span>
+                <input type="text" id="choice0" placeholder="نص الخيار الأول..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              </div>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                <span class="text-[10px] text-slate-400">صورة الخيار (اختياري):</span>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'choice0ImgPreview', 'choice0ImgUrl')" class="text-[10px] text-slate-500 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-slate-800 file:text-slate-300 cursor-pointer">
+                <input type="hidden" id="choice0ImgUrl">
+                <img id="choice0ImgPreview" src="" class="hidden w-8 h-8 rounded border object-cover">
+              </div>
+            </div>
+
+            <!-- خيار 2 -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="correctChoice" value="1" class="w-4 h-4 text-indigo-600">
+                <span class="text-xs font-bold text-slate-400">الخيار 2:</span>
+                <input type="text" id="choice1" placeholder="نص الخيار الثاني..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              </div>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                <span class="text-[10px] text-slate-400">صورة الخيار (اختياري):</span>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'choice1ImgPreview', 'choice1ImgUrl')" class="text-[10px] text-slate-500 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-slate-800 file:text-slate-300 cursor-pointer">
+                <input type="hidden" id="choice1ImgUrl">
+                <img id="choice1ImgPreview" src="" class="hidden w-8 h-8 rounded border object-cover">
+              </div>
+            </div>
+
+            <!-- خيار 3 -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="correctChoice" value="2" class="w-4 h-4 text-indigo-600">
+                <span class="text-xs font-bold text-slate-400">الخيار 3:</span>
+                <input type="text" id="choice2" placeholder="نص الخيار الثالث..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              </div>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                <span class="text-[10px] text-slate-400">صورة الخيار (اختياري):</span>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'choice2ImgPreview', 'choice2ImgUrl')" class="text-[10px] text-slate-500 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-slate-800 file:text-slate-300 cursor-pointer">
+                <input type="hidden" id="choice2ImgUrl">
+                <img id="choice2ImgPreview" src="" class="hidden w-8 h-8 rounded border object-cover">
+              </div>
+            </div>
+
+            <!-- خيار 4 -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="correctChoice" value="3" class="w-4 h-4 text-indigo-600">
+                <span class="text-xs font-bold text-slate-400">الخيار 4:</span>
+                <input type="text" id="choice3" placeholder="نص الخيار الرابع..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              </div>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                <span class="text-[10px] text-slate-400">صورة الخيار (اختياري):</span>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'choice3ImgPreview', 'choice3ImgUrl')" class="text-[10px] text-slate-500 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-slate-800 file:text-slate-300 cursor-pointer">
+                <input type="hidden" id="choice3ImgUrl">
+                <img id="choice3ImgPreview" src="" class="hidden w-8 h-8 rounded border object-cover">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">درجة السؤال:</label>
+          <input type="number" id="modalQuestionPoints" min="1" value="1" class="w-24 px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+        <button onclick="closeQuestionModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition">إلغاء</button>
+        <button onclick="saveQuestionFromModal()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ السؤال</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تكبير وعرض صور المتسابقين (Lightbox) -->
+  <div id="imageLightboxModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
+    <div class="relative max-w-3xl w-full text-center space-y-3" onclick="event.stopPropagation()">
+      <button onclick="closeLightbox()" class="absolute -top-10 left-0 text-white hover:text-amber-300 text-2xl font-bold">✕ إغلاق</button>
+      <img id="lightboxImg" src="" class="w-full max-h-[80vh] object-contain rounded-2xl border border-slate-700 shadow-2xl mx-auto">
+      <p id="lightboxCaption" class="text-sm font-bold text-yellow-300"></p>
+    </div>
+  </div>
+
+  <!-- نافذة تسجيل دخول المشرف السرية بالـ PIN -->
+  <div id="adminPinModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-700 max-w-sm w-full p-6 text-center space-y-4">
+      <div class="w-14 h-14 bg-indigo-950/80 text-yellow-300 border border-indigo-500/30 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+        🔒
+      </div>
+      <h3 class="text-lg font-black text-white">دخول المشرف (مصعب الأسود)</h3>
+      <p class="text-xs text-slate-400">أدخل رمز الـ PIN السري لفتح لوحة التحكم والنتائج:</p>
+      <input type="password" id="inputPinAttempt" placeholder="••••" class="w-full text-center tracking-widest text-xl px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-yellow-300 font-mono focus:ring-2 focus:ring-indigo-500 outline-none">
+      <div class="flex gap-2">
+        <button onclick="closePinModal()" class="flex-1 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-bold">إلغاء</button>
+        <button onclick="verifyPinCode()" class="flex-1 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">تأكيد الدخول</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- تذييل الصفحة مع قفل المشرف السري -->
+  <footer class="bg-slate-900 border-t border-slate-800/80 py-4 px-4 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between max-w-5xl mx-auto w-full gap-2">
+    <div>
+      مسابقة <span class="text-yellow-400 font-bold">كلان PS</span> الكبرى &copy; 2026 | تطوير وإشراف: <span class="text-slate-300 font-bold">مصعب موسى الأسود</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-[11px] text-slate-600">منطقة الإدارة:</span>
+      <button onclick="openPinModal()" class="text-slate-500 hover:text-indigo-400 p-1 rounded transition" title="دخول المشرف">
+        🔒
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    // الإعدادات الافتراضية لكلان PS
+    const DEFAULT_CONFIG = {
+      title: "مسابقة كلان PS الكبرى 🏆",
+      description: "مسابقة التحدي والمعلومات الكبرى لأبطال كلان PS، والجوائز بانتظار الفائزين!",
+      durationMinutes: 10,
+      startTime: "", // مثلاً "11:00"
+      endTime: "",   // مثلاً "11:10"
+      adminPin: "1234",
+      allowReview: false, // مراجعة الأخطاء معطلة افتراضياً حسب طلب مصعب
+      backendUrl: "",
+      questions: [
+        {
+          id: 1,
+          text: "ما هي عاصمة دولة فلسطين الأبدية؟",
+          image: "",
+          choices: [
+            { text: "القدس الشريف", image: "" },
+            { text: "غزة", image: "" },
+            { text: "رام الله", image: "" },
+            { text: "نابلس", image: "" }
+          ],
+          correct: 0,
+          points: 1
+        },
+        {
+          id: 2,
+          text: "أي من الخيارات التالية يمثل شعار كلان PS الرسمي؟",
+          image: "",
+          choices: [
+            { text: "شعار النجوم", image: "" },
+            { text: "شعار PS الذهبي", image: "" },
+            { text: "شعار الصقر", image: "" },
+            { text: "شعار التاج", image: "" }
+          ],
+          correct: 1,
+          points: 1
+        }
+      ]
+    };
+
+    let config = JSON.parse(localStorage.getItem('clan_ps_quiz_config') || JSON.stringify(DEFAULT_CONFIG));
+    let results = JSON.parse(localStorage.getItem('clan_ps_quiz_results') || '[]');
+
+    let isAdminLoggedIn = false;
+    let currentStudent = "";
+    let currentStudentPhone = "";
+    let quizStartTime = null;
+    let timerInterval = null;
+    let waitInterval = null;
+    let remainingSeconds = 0;
+    let studentAnswers = {};
+    let editingQuestionId = null;
+
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === config.adminPin || urlParams.get('admin') === 'true') {
+        unlockAdmin();
+      }
+
+      applyConfigToUI();
+      renderAdminQuestions();
+      renderResultsTable();
+    };
+
+    // ==========================================
+    // التحكم بالصلاحيات ودخول المشرف
+    // ==========================================
+    function openPinModal() {
+      document.getElementById('inputPinAttempt').value = "";
+      document.getElementById('adminPinModal').classList.remove('hidden');
+      document.getElementById('inputPinAttempt').focus();
+    }
+
+    function closePinModal() {
+      document.getElementById('adminPinModal').classList.add('hidden');
+    }
+
+    function verifyPinCode() {
+      const pin = document.getElementById('inputPinAttempt').value.trim();
+      if (pin === config.adminPin) {
+        closePinModal();
+        unlockAdmin();
+        switchTab('admin');
+      } else {
+        alert("رمز الـ PIN غير صحيح!");
+      }
+    }
+
+    function unlockAdmin() {
+      isAdminLoggedIn = true;
+      document.getElementById('adminNavButtons').classList.remove('hidden');
+    }
+
+    function lockAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById('adminNavButtons').classList.add('hidden');
+      switchTab('quiz');
+    }
+
+    function switchTab(tab) {
+      if (!isAdminLoggedIn && tab !== 'quiz') {
+        openPinModal();
+        return;
+      }
+
+      document.getElementById('sectionQuiz').classList.add('hidden');
+      document.getElementById('sectionAdmin').classList.add('hidden');
+      document.getElementById('sectionResults').classList.add('hidden');
+
+      document.getElementById('tabBtnQuiz').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-slate-200";
+      document.getElementById('tabBtnAdmin').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-slate-200";
+      document.getElementById('tabBtnResults').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1";
+
+      if (tab === 'quiz') {
+        document.getElementById('sectionQuiz').classList.remove('hidden');
+        document.getElementById('tabBtnQuiz').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow";
+      } else if (tab === 'admin') {
+        document.getElementById('sectionAdmin').classList.remove('hidden');
+        document.getElementById('tabBtnAdmin').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow";
+      } else if (tab === 'results') {
+        document.getElementById('sectionResults').classList.remove('hidden');
+        document.getElementById('tabBtnResults').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow flex items-center gap-1";
+        renderResultsTable();
+      }
+    }
+
+    function applyConfigToUI() {
+      document.getElementById('headerQuizTitle').innerText = config.title;
+      document.getElementById('entryQuizTitle').innerText = config.title;
+
+      document.getElementById('adminQuizTitle').value = config.title;
+      document.getElementById('adminPinCode').value = config.adminPin;
+      document.getElementById('adminDurationMinutes').value = config.durationMinutes;
+      document.getElementById('adminStartTime').value = config.startTime || "";
+      document.getElementById('adminEndTime').value = config.endTime || "";
+      document.getElementById('adminBackendUrl').value = config.backendUrl || "";
+
+      // تفعيل زر المراجعة
+      document.getElementById('adminAllowReviewToggle').checked = !!config.allowReview;
+
+      document.getElementById('resultsBadge').innerText = results.length;
+    }
+
+    function toggleBackendGuide() {
+      const box = document.getElementById('backendGuideBox');
+      box.classList.toggle('hidden');
+    }
+
+    // معاينة الصور في نافذة منبثقة (Lightbox)
+    function openLightbox(src, caption) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').innerText = caption;
+      document.getElementById('imageLightboxModal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('imageLightboxModal').classList.add('hidden');
+    }
+
+    // ==========================================
+    // تدفق المتسابق وحساب الوقت
+    // ==========================================
+    function startStudentSession() {
+      const name = document.getElementById('studentNameInput').value.trim();
+      const phone = document.getElementById('studentPhoneInput').value.trim();
+
+      if (!name) {
+        alert("يرجى كتابة اسمك للدخول إلى المسابقة.");
+        return;
+      }
+      if (!phone) {
+        alert("يرجى كتابة رقم الجوال / المحفظة لتحويل الجائزة لك بحال الفوز.");
+        return;
+      }
+
+      currentStudent = name;
+      currentStudentPhone = phone;
+
+      const now = new Date();
+      if (config.startTime) {
+        const [startH, startM] = config.startTime.split(':').map(Number);
+        const startTimeObj = new Date();
+        startTimeObj.setHours(startH, startM, 0, 0);
+
+        if (now < startTimeObj) {
+          document.getElementById('studentEntryCard').classList.add('hidden');
+          document.getElementById('waitingScreen').classList.remove('hidden');
+          document.getElementById('waitingStudentName').innerText = currentStudent;
+
+          if (waitInterval) clearInterval(waitInterval);
+          waitInterval = setInterval(() => {
+            const currentNow = new Date();
+            const diffMs = startTimeObj - currentNow;
+            if (diffMs <= 0) {
+              clearInterval(waitInterval);
+              launchActiveQuiz();
+            } else {
+              const diffSec = Math.floor(diffMs / 1000);
+              const h = String(Math.floor(diffSec / 3600)).padStart(2, '0');
+              const m = String(Math.floor((diffSec % 3600) / 60)).padStart(2, '0');
+              const s = String(diffSec % 60).padStart(2, '0');
+              document.getElementById('waitingCountdown').innerText = `${h}:${m}:${s}`;
+            }
+          }, 1000);
+          return;
+        }
+      }
+
+      if (config.endTime) {
+        const [endH, endM] = config.endTime.split(':').map(Number);
+        const endTimeObj = new Date();
+        endTimeObj.setHours(endH, endM, 0, 0);
+        if (now >= endTimeObj) {
+          alert("عذراً يا بطل! انتهى الوقت المحدد لهذه المسابقة وأُغلقت تلقائياً.");
+          return;
+        }
+      }
+
+      launchActiveQuiz();
+    }
+
+    function launchActiveQuiz() {
+      document.getElementById('studentEntryCard').classList.add('hidden');
+      document.getElementById('waitingScreen').classList.add('hidden');
+      document.getElementById('quizActiveArea').classList.remove('hidden');
+
+      document.getElementById('activeStudentName').innerText = currentStudent;
+      studentAnswers = {};
+      quizStartTime = new Date();
+
+      let totalSeconds = config.durationMinutes * 60;
+      if (config.endTime) {
+        const [endH, endM] = config.endTime.split(':').map(Number);
+        const endTimeObj = new Date();
+        endTimeObj.setHours(endH, endM, 0, 0);
+        const diffMs = endTimeObj - new Date();
+        const diffSec = Math.floor(diffMs / 1000);
+        if (diffSec > 0 && diffSec < totalSeconds) {
+          totalSeconds = diffSec;
+        }
+      }
+
+      remainingSeconds = totalSeconds;
+      renderQuestionsForStudent();
+      startQuizTimer();
+    }
+
+    function renderQuestionsForStudent() {
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = "";
+
+      config.questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/80 rounded-3xl p-5 sm:p-6 shadow-xl border border-slate-800 text-right space-y-4";
+
+        let qImgHtml = "";
+        if (q.image) {
+          qImgHtml = `
+            <div class="rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 max-h-72 flex items-center justify-center p-2">
+              <img src="${q.image}" alt="صورة السؤال" class="max-h-64 object-contain rounded-xl">
+            </div>
+          `;
+        }
+
+        const hasChoiceImages = q.choices.some(c => c.image);
+
+        let choicesHtml = "";
+        if (hasChoiceImages) {
+          choicesHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">` +
+            q.choices.map((ch, cIdx) => `
+              <label class="choice-card relative block cursor-pointer">
+                <input type="radio" name="q_${q.id}" value="${cIdx}" onchange="recordAnswer(${q.id}, ${cIdx})" class="hidden">
+                <div class="choice-content p-3 rounded-2xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 transition flex flex-col items-center gap-2 text-center h-full">
+                  ${ch.image ? `<img src="${ch.image}" class="w-full h-32 object-contain rounded-xl bg-slate-900 p-1">` : ''}
+                  ${ch.text ? `<span class="text-xs sm:text-sm font-bold text-slate-200 mt-1">${ch.text}</span>` : ''}
+                </div>
+              </label>
+            `).join('') +
+          `</div>`;
+        } else {
+          choicesHtml = `<div class="space-y-2.5 pt-1">` +
+            q.choices.map((ch, cIdx) => `
+              <label class="flex items-center gap-3 p-3.5 rounded-2xl border border-slate-800/80 bg-slate-950/40 hover:bg-indigo-950/30 cursor-pointer transition">
+                <input type="radio" name="q_${q.id}" value="${cIdx}" onchange="recordAnswer(${q.id}, ${cIdx})" class="w-4 h-4 text-indigo-500 accent-indigo-600">
+                <span class="text-xs sm:text-sm font-bold text-slate-200">${ch.text || ch}</span>
+              </label>
+            `).join('') +
+          `</div>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3 border-b border-slate-800/80 pb-3">
+            <h4 class="text-sm sm:text-base font-black text-white leading-snug">
+              <span class="text-yellow-400 font-black ml-1.5">${idx + 1}.</span>
+              ${q.text}
+            </h4>
+            <span class="text-[11px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-bold whitespace-nowrap">${q.points} درجة</span>
+          </div>
+          ${qImgHtml}
+          ${choicesHtml}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function recordAnswer(questionId, choiceIndex) {
+      studentAnswers[questionId] = choiceIndex;
+    }
+
+    function startQuizTimer() {
+      updateTimerBadge();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        remainingSeconds--;
+        updateTimerBadge();
+
+        if (remainingSeconds <= 0) {
+          clearInterval(timerInterval);
+          finishQuiz(true);
+        }
+      }, 1000);
+    }
+
+    function updateTimerBadge() {
+      const m = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+      const s = String(remainingSeconds % 60).padStart(2, '0');
+      const display = document.getElementById('quizTimerDisplay');
+      const badge = document.getElementById('timerBadge');
+
+      display.innerText = `${m}:${s}`;
+
+      if (remainingSeconds <= 60) {
+        badge.className = "bg-red-950/80 text-red-300 border border-red-500/60 px-3.5 py-1.5 rounded-xl font-mono text-base sm:text-lg font-black flex items-center gap-2 animate-bounce";
+      } else if (remainingSeconds <= 180) {
+        badge.className = "bg-amber-950/80 text-amber-300 border border-amber-500/60 px-3.5 py-1.5 rounded-xl font-mono text-base sm:text-lg font-black flex items-center gap-2";
+      } else {
+        badge.className = "bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl font-mono text-base sm:text-lg font-black flex items-center gap-2";
+      }
+    }
+
+    function submitQuizManually() {
+      if (confirm("هل أنت متأكد من تسليم الإجابات الآن وإنهاء المسابقة يا بطل؟")) {
+        clearInterval(timerInterval);
+        finishQuiz(false);
+      }
+    }
+
+    function finishQuiz(isTimeout = false) {
+      let score = 0;
+      let maxPoints = 0;
+
+      config.questions.forEach(q => {
+        maxPoints += q.points;
+        if (studentAnswers[q.id] !== undefined && studentAnswers[q.id] === q.correct) {
+          score += q.points;
+        }
+      });
+
+      const timeSpentSec = Math.max(1, (config.durationMinutes * 60) - Math.max(0, remainingSeconds));
+      const mSpent = Math.floor(timeSpentSec / 60);
+      const sSpent = timeSpentSec % 60;
+      const durationFormatted = `${mSpent} د و ${sSpent} ث`;
+
+      const resultRecord = {
+        student: currentStudent,
+        phone: currentStudentPhone,
+        score: score,
+        maxPoints: maxPoints,
+        percentage: Math.round((score / maxPoints) * 100),
+        timeSpent: durationFormatted,
+        submittedAt: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        date: new Date().toLocaleDateString('ar-EG'),
+        answers: studentAnswers
+      };
+
+      results.push(resultRecord);
+      localStorage.setItem('clan_ps_quiz_results', JSON.stringify(results));
+      document.getElementById('resultsBadge').innerText = results.length;
+
+      if (config.backendUrl) {
+        try {
+          fetch(config.backendUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(resultRecord)
+          }).catch(err => console.log('Backend sync note:', err));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      document.getElementById('quizActiveArea').classList.add('hidden');
+      document.getElementById('quizFinishedCard').classList.remove('hidden');
+      document.getElementById('finishedStudentName').innerText = currentStudent;
+
+      if (isTimeout) {
+        document.getElementById('finishTitle').innerText = "⏰ انتهى وقت المسابقة تماماً!";
+        document.getElementById('finishDesc').innerHTML = `أُغلق الاختبار تلقائياً لحلول نهاية الوقت، وحُفظت جميع إجاباتك ورقم جوالك بنجاح يا بطل.`;
+      }
+
+      // إذا كانت مراجعة الأخطاء مفعلة من قبل المشرف
+      if (config.allowReview) {
+        document.getElementById('reviewAnswersSection').classList.remove('hidden');
+        renderStudentReview();
+      } else {
+        document.getElementById('reviewAnswersSection').classList.add('hidden');
+        document.getElementById('reviewDetailsBox').classList.add('hidden');
+      }
+    }
+
+    // ==========================================
+    // مراجعة الأسئلة والأخطاء للمتسابق
+    // ==========================================
+    function toggleAnswersReview() {
+      const box = document.getElementById('reviewDetailsBox');
+      box.classList.toggle('hidden');
+    }
+
+    function renderStudentReview() {
+      const container = document.getElementById('reviewQuestionsContainer');
+      container.innerHTML = "";
+
+      config.questions.forEach((q, idx) => {
+        const userChoiceIdx = studentAnswers[q.id];
+        const isCorrect = userChoiceIdx === q.correct;
+        const isAnswered = userChoiceIdx !== undefined;
+
+        const qCard = document.createElement('div');
+        qCard.className = `p-4 rounded-2xl border ${isCorrect ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-red-500/40 bg-red-950/20'} space-y-2 text-right`;
+
+        let userChoiceText = isAnswered ? (q.choices[userChoiceIdx]?.text || q.choices[userChoiceIdx]) : "لم يتم الحل";
+        let correctChoiceText = q.choices[q.correct]?.text || q.choices[q.correct];
+
+        qCard.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-black text-white">${idx + 1}. ${q.text}</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isCorrect ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'}">
+              ${isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة'}
+            </span>
+          </div>
+
+          <div class="space-y-1 text-[11px] pt-1">
+            <p class="text-slate-300">
+              إجابتك: <span class="font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}">${userChoiceText}</span>
+            </p>
+            ${!isCorrect ? `
+              <p class="text-emerald-300 font-bold">
+                الإجابة الصحيحة: <span>${correctChoiceText}</span>
+              </p>
+            ` : ''}
+          </div>
+        `;
+
+        container.appendChild(qCard);
+      });
+    }
+
+    // ==========================================
+    // لوحة تحكم المشرف وإدارة الأسئلة والصور
+    // ==========================================
+    function saveAdminSettings() {
+      config.title = document.getElementById('adminQuizTitle').value.trim() || "مسابقة كلان PS الكبرى";
+      config.adminPin = document.getElementById('adminPinCode').value.trim() || "1234";
+      config.durationMinutes = parseInt(document.getElementById('adminDurationMinutes').value) || 10;
+      config.startTime = document.getElementById('adminStartTime').value;
+      config.endTime = document.getElementById('adminEndTime').value;
+      config.backendUrl = document.getElementById('adminBackendUrl').value.trim();
+
+      // حفظ خيار السماح بالمراجعة
+      config.allowReview = document.getElementById('adminAllowReviewToggle').checked;
+
+      localStorage.setItem('clan_ps_quiz_config', JSON.stringify(config));
+      applyConfigToUI();
+      alert("تم حفظ جميع التعديلات بنجاح يا كابتن مصعب! 💾");
+    }
+
+    function renderAdminQuestions() {
+      const list = document.getElementById('adminQuestionsList');
+      list.innerHTML = "";
+      document.getElementById('questionCountBadge').innerText = config.questions.length;
+
+      config.questions.forEach((q, idx) => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-950 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+
+        let imgThumb = q.image ? `<img src="${q.image}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">` : '';
+
+        item.innerHTML = `
+          <div class="flex items-center gap-3 flex-1 text-right">
+            ${imgThumb}
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold text-yellow-300 bg-yellow-950/60 border border-yellow-500/30 px-2 py-0.5 rounded-full">سؤال ${idx + 1} (${q.points} درجة)</span>
+              <p class="text-xs sm:text-sm font-bold text-white">${q.text}</p>
+              <p class="text-[11px] text-slate-400">الإجابة الصحيحة: <span class="text-emerald-400 font-bold">${q.choices[q.correct]?.text || q.choices[q.correct]}</span></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 self-end sm:self-center">
+            <button onclick="editQuestionModal(${q.id})" class="px-3 py-1.5 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 rounded-lg text-xs font-bold">تعديل ✏️</button>
+            <button onclick="deleteQuestion(${q.id})" class="px-3 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 rounded-lg text-xs font-bold">حذف 🗑️</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function addNewQuestionModal() {
+      editingQuestionId = null;
+      document.getElementById('modalTitle').innerText = "إضافة سؤال جديد";
+      document.getElementById('modalQuestionText').value = "";
+      document.getElementById('modalQuestionImageUrl').value = "";
+      document.getElementById('questionImgPreview').src = "";
+      document.getElementById('questionImgPreviewContainer').classList.add('hidden');
+
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(`choice${i}`).value = "";
+        document.getElementById(`choice${i}ImgUrl`).value = "";
+        const prev = document.getElementById(`choice${i}ImgPreview`);
+        prev.src = "";
+        prev.classList.add('hidden');
+      }
+
+      document.getElementById('modalQuestionPoints').value = "1";
+      document.querySelector('input[name="correctChoice"][value="0"]').checked = true;
+      document.getElementById('questionModal').classList.remove('hidden');
+    }
+
+    function editQuestionModal(id) {
+      const q = config.questions.find(x => x.id === id);
+      if (!q) return;
+      editingQuestionId = id;
+      document.getElementById('modalTitle').innerText = "تعديل السؤال";
+      document.getElementById('modalQuestionText').value = q.text;
+
+      document.getElementById('modalQuestionImageUrl').value = q.image || "";
+      if (q.image) {
+        document.getElementById('questionImgPreview').src = q.image;
+        document.getElementById('questionImgPreviewContainer').classList.remove('hidden');
+      } else {
+        document.getElementById('questionImgPreviewContainer').classList.add('hidden');
+      }
+
+      for (let i = 0; i < 4; i++) {
+        const ch = q.choices[i] || { text: "", image: "" };
+        document.getElementById(`choice${i}`).value = ch.text || (typeof ch === 'string' ? ch : "");
+        document.getElementById(`choice${i}ImgUrl`).value = ch.image || "";
+        const prev = document.getElementById(`choice${i}ImgPreview`);
+        if (ch.image) {
+          prev.src = ch.image;
+          prev.classList.remove('hidden');
+        } else {
+          prev.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('modalQuestionPoints').value = q.points;
+      document.querySelector(`input[name="correctChoice"][value="${q.correct}"]`).checked = true;
+      document.getElementById('questionModal').classList.remove('hidden');
+    }
+
+    function closeQuestionModal() {
+      document.getElementById('questionModal').classList.add('hidden');
+    }
+
+    function handleImageUpload(event, previewId, targetInputId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        document.getElementById(targetInputId).value = base64;
+        const prev = document.getElementById(previewId);
+        prev.src = base64;
+        prev.classList.remove('hidden');
+
+        if (previewId === 'questionImgPreview') {
+          document.getElementById('questionImgPreviewContainer').classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewUrlImage(inputId, previewId) {
+      const url = document.getElementById(inputId).value.trim();
+      const prev = document.getElementById(previewId);
+      if (url) {
+        prev.src = url;
+        prev.classList.remove('hidden');
+        if (previewId === 'questionImgPreview') {
+          document.getElementById('questionImgPreviewContainer').classList.remove('hidden');
+        }
+      } else {
+        prev.classList.add('hidden');
+        if (previewId === 'questionImgPreview') {
+          document.getElementById('questionImgPreviewContainer').classList.add('hidden');
+        }
+      }
+    }
+
+    function saveQuestionFromModal() {
+      const text = document.getElementById('modalQuestionText').value.trim();
+      const qImage = document.getElementById('modalQuestionImageUrl').value.trim();
+
+      const choices = [];
+      for (let i = 0; i < 4; i++) {
+        const cText = document.getElementById(`choice${i}`).value.trim();
+        const cImg = document.getElementById(`choice${i}ImgUrl`).value.trim();
+        choices.push({ text: cText, image: cImg });
+      }
+
+      if (!text && !qImage) {
+        alert("يرجى كتابة نص السؤال أو وضع صورة للسؤال.");
+        return;
+      }
+      if (!choices[0].text && !choices[0].image) {
+        alert("يرجى وضع الخيار الأول على الأقل.");
+        return;
+      }
+
+      const points = parseInt(document.getElementById('modalQuestionPoints').value) || 1;
+      const correct = parseInt(document.querySelector('input[name="correctChoice"]:checked').value);
+
+      if (editingQuestionId) {
+        const q = config.questions.find(x => x.id === editingQuestionId);
+        if (q) {
+          q.text = text;
+          q.image = qImage;
+          q.choices = choices;
+          q.correct = correct;
+          q.points = points;
+        }
+      } else {
+        config.questions.push({
+          id: Date.now(),
+          text: text,
+          image: qImage,
+          choices: choices,
+          correct: correct,
+          points: points
+        });
+      }
+
+      localStorage.setItem('clan_ps_quiz_config', JSON.stringify(config));
+      closeQuestionModal();
+      renderAdminQuestions();
+    }
+
+    function deleteQuestion(id) {
+      if (confirm("هل تريد بالتأكيد حذف هذا السؤال؟")) {
+        config.questions = config.questions.filter(x => x.id !== id);
+        localStorage.setItem('clan_ps_quiz_config', JSON.stringify(config));
+        renderAdminQuestions();
+      }
+    }
+
+    // ==========================================
+    // لوحة النتائج وتصدير الإكسل
+    // ==========================================
+    function renderResultsTable() {
+      const tbody = document.getElementById('resultsTableBody');
+      tbody.innerHTML = "";
+
+      if (results.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">لا توجد إجابات مسجلة حتى الآن.</td></tr>`;
+        document.getElementById('statTotalStudents').innerText = "0";
+        document.getElementById('statHighestScore').innerText = "0";
+        document.getElementById('statAverageScore').innerText = "0";
+        document.getElementById('statMaxPossible').innerText = config.questions.reduce((a, b) => a + b.points, 0);
+        return;
+      }
+
+      results.sort((a, b) => b.score - a.score);
+
+      let totalScore = 0;
+      let highest = 0;
+      let maxPossible = results[0].maxPoints;
+
+      results.forEach((r, idx) => {
+        totalScore += r.score;
+        if (r.score > highest) highest = r.score;
+
+        let rankBadge = `<span class="text-slate-400 font-bold">${idx + 1}</span>`;
+        if (idx === 0) rankBadge = `<span class="px-2 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-full font-black">🥇 الأول</span>`;
+        if (idx === 1) rankBadge = `<span class="px-2 py-0.5 bg-slate-300/20 text-slate-200 border border-slate-300/40 rounded-full font-black">🥈 الثاني</span>`;
+        if (idx === 2) rankBadge = `<span class="px-2 py-0.5 bg-amber-600/20 text-amber-400 border border-amber-600/40 rounded-full font-black">🥉 الثالث</span>`;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/60 transition";
+        tr.innerHTML = `
+          <td class="p-3">${rankBadge}</td>
+          <td class="p-3 font-bold text-white">${r.student}</td>
+          <td class="p-3 font-mono text-amber-300 font-bold" dir="ltr">${r.phone || '—'}</td>
+          <td class="p-3 font-black text-yellow-400">${r.score} / ${r.maxPoints}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded-full text-xs font-bold ${r.percentage >= 80 ? 'bg-emerald-950 text-emerald-300 border border-emerald-600/30' : (r.percentage >= 50 ? 'bg-amber-950 text-amber-300 border border-amber-600/30' : 'bg-red-950 text-red-300 border border-red-600/30')}">
+              ${r.percentage}%
+            </span>
+          </td>
+          <td class="p-3 text-slate-400">${r.submittedAt}</td>
+          <td class="p-3 text-slate-400">${r.timeSpent}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('statTotalStudents').innerText = results.length;
+      document.getElementById('statHighestScore').innerText = highest;
+      document.getElementById('statAverageScore').innerText = Math.round((totalScore / results.length) * 10) / 10;
+      document.getElementById('statMaxPossible').innerText = maxPossible;
+      document.getElementById('resultsBadge').innerText = results.length;
+    }
+
+    function clearAllResults() {
+      if (confirm("هل تريد بالتأكيد مسح جميع نتائج المتسابقين لبدء مسابقة جديدة؟")) {
+        results = [];
+        localStorage.removeItem('clan_ps_quiz_results');
+        renderResultsTable();
+      }
+    }
+
+    function exportResultsToExcel() {
+      if (results.length === 0) {
+        alert("لا توجد نتائج لتصديرها.");
+        return;
+      }
+
+      let csvContent = "\uFEFFالترتيب,اسم المتسابق,رقم الجوال للتحويل,العلامة,الدرجة الكاملة,النسبة المئوية,وقت التسليم,المدة المستغرقة\n";
+      results.forEach((r, idx) => {
+        csvContent += `${idx + 1},"${r.student}","${r.phone || ''}",${r.score},${r.maxPoints},${r.percentage}%,${r.submittedAt},"${r.timeSpent}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `نتائج_مسابقة_كلان_PS_${new Date().toLocaleDateString('ar-EG')}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
